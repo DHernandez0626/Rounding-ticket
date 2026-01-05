@@ -218,9 +218,8 @@ class Mainframe():
             page = browser.new_page()
             page.goto(SERVICE_WEBSITE, wait_until="networkidle")
             time.sleep(2)
-            print(ticket_information)
             pyauto.PAUSE = 2
-            pyauto.write("Danny Hernandez")
+            pyauto.write(self.user_entry_var.get())
             pyauto.press("down")
             pyauto.press("enter")
             pyauto.press("tab")

@@ -15,14 +15,4 @@ mainframe = ui.Mainframe(root)
 
 
 
-#pyauto.PAUSE = 2
-
-# pyauto.write("Danny Hernandez")
-
-# page.pause()
-
-
-
-
-
 root.mainloop()

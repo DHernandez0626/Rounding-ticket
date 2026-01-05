@@ -30,13 +30,14 @@ class Mainframe():
     root = tk.Tk( )
     mainframe = ui.Mainframe(root)
     """
+    
     def __init__(self, parent):
         self.mainframe = tk.Frame(parent)
         self.mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         
         
         # Define categories and subcategories for ticket types
-        self.category = ["PC", "Printer", "Tracker", "Laptop", "Scanner", "Mobile Phone"]
+        self.CATEGORY = ["PC", "Printer", "Tracker", "Laptop", "Scanner", "Mobile Phone"]
         self.HARDWARE_SUBCATEGORIES = ("Broken", "Consumables (Paper/Toner/Ink)", "Hardware Failure", "Hardware Installation/Setup")
         self.APPLICATION_SUBCATEGORIES = ("Configuration/Functionality", "Connectivity")
         self.NETWORK_SUBCATEGORIES = ("Connectivity – External", "Connectivity – Internal", "Hardware Failure", "Hardware Upgrade")
@@ -106,7 +107,7 @@ class Mainframe():
         # Label and Combobox for Issue Type
         self.issue_type_var = StringVar()
         self.issue_type_var.set("PC")
-        self.issue_type_box = ttk.Combobox(self.mainframe, values=(self.category), textvariable=self.issue_type_var, width=10)
+        self.issue_type_box = ttk.Combobox(self.mainframe, values=(self.CATEGORY), textvariable=self.issue_type_var, width=10)
         self.issue_type_box.grid(column=1, row=3, sticky=W, padx=5, pady=5)
         issue_type_label = tk.Label(self.mainframe, text="Issue Type: ")
         issue_type_label.grid(column=0, row=3, sticky=W, padx=5, pady=5)
@@ -122,12 +123,14 @@ class Mainframe():
         self.subissue_type_var.set("Hardware Failure")
         self.subissue_type_box = ttk.Combobox(self.mainframe, values=(self.HARDWARE_SUBCATEGORIES), textvariable=self.subissue_type_var, width=30)
         self.subissue_type_box.grid(column=1, row=5, sticky=W, padx=5, pady=5)
+        subissue_type_label = tk.Label(self.mainframe, text="Subcategory: ")
+        subissue_type_label.grid(column=0, row=5, sticky=W, padx=5, pady=5)
         
         
         # Label and Entry for Short description
         self.short_description_label_var = StringVar()
         short_description_label = tk.Label(self.mainframe, text="Short description of Issue: ")
-        short_description_label.grid(column=0, row=5, sticky=W, padx=5, pady=5)
+        short_description_label.grid(column=0, row=6, sticky=W, padx=5, pady=5)
         self.short_description_entry = tk.Entry(self.mainframe, width=80, textvariable=self.short_description_label_var)
         self.short_description_entry.grid(column=1, columnspan=3, row=6, sticky=(W, E), padx=5, pady=5)
         
@@ -136,19 +139,18 @@ class Mainframe():
         # Label and Text for Detailed description
         self.detailed_description_label_var = StringVar()
         detailed_description_label = tk.Label(self.mainframe, text="Detailed description of Issue: ")
-        detailed_description_label.grid(column=0, row=5, sticky=W, padx=5, pady=5)
+        detailed_description_label.grid(column=0, row=7, sticky=W, padx=5, pady=5)
         self.detailed_description_entry = tk.Text(self.mainframe, width=80, height=10)
         self.detailed_description_entry.grid(column=1, columnspan=3, row=7, sticky=(W, E), padx=5, pady=5)
         
         self.resolution_label_var = StringVar()
         resolution_label = tk.Label(self.mainframe, text="Resolution closing notes: ")
-        resolution_label.grid(column=0, row=6, sticky=W, padx=5, pady=5)
+        resolution_label.grid(column=0, row=8, sticky=W, padx=8, pady=5)
         self.resolution_entry = tk.Text(self.mainframe, width=80, height=10)
         self.resolution_entry.grid(column=1, columnspan=3, row=8, sticky=(W, E), padx=5, pady=5)
         
         # Submit Tickets Button
-        self.submit_button = tk.Button(self.mainframe, text="Submit Tickets")
-       # self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
+        self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
         self.submit_button.grid(column=8, row=7, sticky=(S, E), padx=5, pady=10)
         
         
@@ -182,28 +184,31 @@ class Mainframe():
             ticket_information.append(self.user_entry_var.get())
             ticket_information.append(self.location_entry_var.get())
             ticket_information.append(self.department_entry_var.get())
-            
-            if self.issue_type_var.get() == "PC":
-                ticket_information.append("TSO Computer - HCA FLORIDA KENDALL HOSPITAL")
-            elif self.issue_type_var.get() == "Printer":
-                ticket_information.append("TSO Printer - HCA FLORIDA KENDALL HOSPITAL")
-            elif self.issue_type_var.get() == "Tracker":
-                ticket_information.append("Thin Tracker - East Florida")
-            elif self.issue_type_var.get() == "Laptop":
-                ticket_information.append("TSO Computer - HCA FLORIDA WOODMONT HOSPITAL")
-            elif self.issue_type_var.get() == "Scanner":
-                ticket_information.append("TSO Barcode Scanner - HCA FLORIDA KENDALL HOSPITAL")
-            elif self.issue_type_var.get() == "Mobile Phone":
-                ticket_information.append("TSO Mobile Device - HCA FLORIDA KENDALL HOSPITAL")
+        except ValueError:
+            messagebox.showerror("Input Error", "All fields must be filled out before submitting tickets.")
+            return
+        
+        
+        if self.issue_type_var.get() == "PC":
+            ticket_information.append("TSO Computer - HCA FLORIDA KENDALL HOSPITAL")
+        elif self.issue_type_var.get() == "Printer":
+            ticket_information.append("TSO Printer - HCA FLORIDA KENDALL HOSPITAL")
+        elif self.issue_type_var.get() == "Tracker":
+            ticket_information.append("Thin Tracker - East Florida")
+        elif self.issue_type_var.get() == "Laptop":
+            ticket_information.append("TSO Computer - HCA FLORIDA WOODMONT HOSPITAL")
+        elif self.issue_type_var.get() == "Scanner":
+            ticket_information.append("TSO Barcode Scanner - HCA FLORIDA KENDALL HOSPITAL")
+        elif self.issue_type_var.get() == "Mobile Phone":
+            ticket_information.append("TSO Mobile Device - HCA FLORIDA KENDALL HOSPITAL")
+                
+            ticket_information.append(self.issue_type_var.get())
+            ticket_information.append(self.subissue_type_var.get())
                 
             
             ticket_information.append(self.short_description_label_var.get())
             ticket_information.append(self.detailed_description_entry.get("1.0", END).strip())
             ticket_information.append(self.resolution_entry.get("1.0", END).strip())
-        except ValueError:
-            messagebox.showerror("Input Error", "All fields must be filled out before submitting tickets.")
-            return
-        
         playwright = sync_playwright().start()
         # Use playwright.chromium, playwright.firefox or playwright.webkit
         # Pass headless=False to launch() to see the browser UI
@@ -220,6 +225,3 @@ class Mainframe():
             pyauto.press("enter")
             pyauto.press("tab")
         
-        
-        
-        pass

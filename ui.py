@@ -25,6 +25,16 @@ class Mainframe():
         self.mainframe = tk.Frame(parent)
         self.mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         
+        
+        # Define categories and subcategories for ticket types
+        self.category = ["PC", "Printer", "Tracker", "Laptop", "Scanner", "Mobile Phone"]
+        self.HARDWARE_SUBCATEGORIES = ("Broken", "Consumables (Paper/Toner/Ink)", "Hardware Failure", "Hardware Installation/Setup")
+        self.APPLICATION_SUBCATEGORIES = ("Configuration/Functionality", "Connectivity")
+        self.NETWORK_SUBCATEGORIES = ("Connectivity – External", "Connectivity – Internal", "Hardware Failure", "Hardware Upgrade")
+        self.STORAGE_SUBCATEGORIES = ("Capacity")
+        self.subissue_type_var = StringVar()
+        
+        
         # def show_subcategories(*args):
         
         # Functions for adding and removing devices from the listbox
@@ -87,7 +97,7 @@ class Mainframe():
         # Label and Combobox for Issue Type
         self.issue_type_var = StringVar()
         self.issue_type_var.set("PC")
-        self.issue_type_box = ttk.Combobox(self.mainframe, values=("PC", "Printer", "Tracker", "Laptop", "Scanner", "Mobile Phone"), textvariable=self.issue_type_var, width=10)
+        self.issue_type_box = ttk.Combobox(self.mainframe, values=(self.category), textvariable=self.issue_type_var, width=10)
         self.issue_type_box.grid(column=1, row=3, sticky=W, padx=5, pady=5)
         issue_type_label = tk.Label(self.mainframe, text="Issue Type: ")
         issue_type_label.grid(column=0, row=3, sticky=W, padx=5, pady=5)
@@ -96,17 +106,13 @@ class Mainframe():
         self.category_var.set("Hardware")
         self.category_box = ttk.Combobox(self.mainframe, values=("Hardware", "Application", "Network", "Storage"), textvariable=self.category_var, width=10)
         self.category_box.grid(column=1, row=4, sticky=W, padx=5, pady=5)
+        self.category_box.bind("<<ComboboxSelected>>", self.change_subcategories)
         category_label = tk.Label(self.mainframe, text="Category: ")
         category_label.grid(column=0, row=4, sticky=W, padx=5, pady=5)
         
-        
-        # self.subissue_type_var = StringVar()
-        # if self.issue_type_var.get() == "PC" and self.category_var.get() == "Hardware":
-        #     self.subissue_type_var.set("Hardware Failure")
-        #     self.subissue_type_box = ttk.Combobox(self.mainframe, values=("Hardware Failure", "Hardware Installation/Setup", "Network"), textvariable=self.subissue_type_var, width=23)
-        #     self.subissue_type_box.grid(column=1, row=5, sticky=W, padx=5, pady=5)
-
-        
+        self.subissue_type_var.set("Hardware Failure")
+        self.subissue_type_box = ttk.Combobox(self.mainframe, values=(self.HARDWARE_SUBCATEGORIES), textvariable=self.subissue_type_var, width=30)
+        self.subissue_type_box.grid(column=1, row=5, sticky=W, padx=5, pady=5)
         
         
         # Label and Entry for Short description
@@ -135,6 +141,24 @@ class Mainframe():
         self.submit_button = tk.Button(self.mainframe, text="Submit Tickets")
        # self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
         self.submit_button.grid(column=8, row=7, sticky=(S, E), padx=5, pady=10)
+        
+        
+        
+    # Function to change subcategories based on selected category    
+    def change_subcategories(self, *args):
+        if self.category_var.get() == "Hardware":
+            self.subissue_type_box.config(values=(self.HARDWARE_SUBCATEGORIES))
+            self.subissue_type_var.set("Hardware Failure")
+        elif self.category_var.get() == "Application":
+            self.subissue_type_box.config(values=(self.APPLICATION_SUBCATEGORIES))
+            self.subissue_type_var.set("Configuration/Functionality")
+        elif self.category_var.get() == "Network":
+            self.subissue_type_box.config(values=(self.NETWORK_SUBCATEGORIES))
+            self.subissue_type_var.set("Connectivity – External")
+        elif self.category_var.get() == "Storage":
+            self.subissue_type_box.config(values=(self.STORAGE_SUBCATEGORIES))
+            self.subissue_type_var.set("Capacity")
+        
         
     # Function to gather ticket information and submit tickets after submit button is pressed
     def submit_tickets(self):

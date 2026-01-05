@@ -173,42 +173,14 @@ class Mainframe():
         
     # Function to gather ticket information and submit tickets after submit button is pressed
     def submit_tickets(self):
-        
-        # initialize list to hold ticket information
-        ticket_information = []
         try:
-            
             # if any fields are empty, raise ValueError
             if self.user_entry_var.get() == "" or self.location_entry_var.get() == "" or self.department_entry_var.get() == "" or self.issue_type_var.get() == "" or self.short_description_label_var.get() == "" or self.detailed_description_entry.get("1.0", END).strip() == "" or self.resolution_entry.get("1.0", END).strip() == "":
                 raise ValueError("All fields must be filled out before submitting tickets.")
-            ticket_information.append(self.user_entry_var.get())
-            ticket_information.append(self.location_entry_var.get())
-            ticket_information.append(self.department_entry_var.get())
         except ValueError:
             messagebox.showerror("Input Error", "All fields must be filled out before submitting tickets.")
             return
         
-        
-        if self.issue_type_var.get() == "PC":
-            ticket_information.append("TSO Computer - HCA FLORIDA KENDALL HOSPITAL")
-        elif self.issue_type_var.get() == "Printer":
-            ticket_information.append("TSO Printer - HCA FLORIDA KENDALL HOSPITAL")
-        elif self.issue_type_var.get() == "Tracker":
-            ticket_information.append("Thin Tracker - East Florida")
-        elif self.issue_type_var.get() == "Laptop":
-            ticket_information.append("TSO Computer - HCA FLORIDA WOODMONT HOSPITAL")
-        elif self.issue_type_var.get() == "Scanner":
-            ticket_information.append("TSO Barcode Scanner - HCA FLORIDA KENDALL HOSPITAL")
-        elif self.issue_type_var.get() == "Mobile Phone":
-            ticket_information.append("TSO Mobile Device - HCA FLORIDA KENDALL HOSPITAL")
-                
-            ticket_information.append(self.issue_type_var.get())
-            ticket_information.append(self.subissue_type_var.get())
-                
-            
-            ticket_information.append(self.short_description_label_var.get())
-            ticket_information.append(self.detailed_description_entry.get("1.0", END).strip())
-            ticket_information.append(self.resolution_entry.get("1.0", END).strip())
         playwright = sync_playwright().start()
         # Use playwright.chromium, playwright.firefox or playwright.webkit
         # Pass headless=False to launch() to see the browser UI
@@ -222,5 +194,24 @@ class Mainframe():
             pyauto.write(self.user_entry_var.get())
             pyauto.press("down")
             pyauto.press("enter")
+            for _ in range(7):
+                pyauto.press("tab")
+            pyauto.write(self.location_entry_var.get())
+            pyauto.press("down")
+            pyauto.press("enter")
+            for _ in range(3):
+                pyauto.press("tab")
+            pyauto.write(self.department_entry_var.get())
+            for _ in range(4):
+                pyauto.press("tab")
+            pyauto.write(self.issue_type_var.get())
+            pyauto.press("down")
+            pyauto.press("enter")
             pyauto.press("tab")
+            pyauto.write(self.category_var.get())
+            pyauto.press("down")
+            pyauto.press("enter")
+            pyauto.press("tab")
+            pyauto.write(self.subissue_type_var.get())
+            
         

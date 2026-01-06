@@ -311,7 +311,7 @@ class Mainframe():
                 for _ in range(2):
                     check_stop()
                     pyauto.press("down")
-                for _ in range(8):
+                for _ in range(10):
                     check_stop()
                     pyauto.press("tab")
                 pyauto.press("space")

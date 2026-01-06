@@ -204,26 +204,39 @@ class Mainframe():
         try:
             for device in self.all_devices_listbox.get(0, END):
                 browser = playwright.chromium.launch(headless=False, channel="msedge")
+                check_stop()
                 page = browser.new_page()
+                check_stop()
                 page.goto(SERVICE_WEBSITE, wait_until="networkidle")
+                check_stop()
                 time.sleep(2)
                 pyauto.PAUSE = 2
                 pyauto.write(self.user_entry_var.get())
+                check_stop()
                 pyauto.press("down")
+                check_stop()
                 pyauto.press("enter")
+                check_stop()
                 pyauto.PAUSE = 0.2
                 for _ in range(7):
+                    check_stop()
                     pyauto.press("tab")
                 pyauto.PAUSE = 2
                 pyauto.write(self.location_entry_var.get())
+                check_stop()
                 pyauto.press("down")
+                check_stop()
                 pyauto.press("enter")
+                check_stop()
                 pyauto.PAUSE = 0.2
                 for _ in range(3):
+                    check_stop()
                     pyauto.press("tab")
                 pyauto.write(self.department_entry_var.get())
+                check_stop()
                 for _ in range(4):
                     pyauto.press("tab")
+                    check_stop()
                 pyauto.PAUSE = 2
                 if self.issue_type_var.get() == "PC" or self.issue_type_var.get() == "Laptop":
                     pyauto.write(f"TSO Computer - {self.location_entry_var.get()}")
@@ -235,50 +248,78 @@ class Mainframe():
                     pyauto.write(f"TSO Barcode Scanner - {self.location_entry_var.get()}")
                 elif self.issue_type_var.get() == "Mobile Phone":
                     pyauto.write(f"TSO Mobile Device - {self.location_entry_var.get()}")
-                
+                check_stop()
                 pyauto.press("down")
+                check_stop()
                 pyauto.press("enter")
+                check_stop()
                 pyauto.PAUSE = 0.2
                 for _ in range(2):
+                    check_stop()
                     pyauto.press("tab")
                 pyauto.PAUSE = 2
+                check_stop()
                 pyauto.write(self.category_var.get())
+                check_stop()
                 pyauto.press("down")
+                check_stop()
                 pyauto.press("enter")
+                check_stop()
                 pyauto.PAUSE = 0.2
+                check_stop()
                 pyauto.press("tab")
+                check_stop()
                 pyauto.PAUSE = 2
                 pyauto.write(self.subissue_type_var.get())
+                check_stop()
                 pyauto.press("down")
+                check_stop()
                 pyauto.press("enter")
+                check_stop()
                 pyauto.PAUSE = 0.1
                 for _ in range(2):
+                    check_stop()
                     pyauto.press("tab")
                 for _ in range(4):
+                    check_stop()
                     pyauto.press("down")
                 for _ in range(10):
+                    check_stop()
                     pyauto.press("tab")
                 for _ in range(2):
+                    check_stop()
                     pyauto.press("down")
                 for _ in range(5):
+                    check_stop()
                     pyauto.press("tab")
                 pyauto.write(f"{device}- {self.issue_type_var.get()} - {self.short_description_entry.get()}")
+                check_stop()
                 pyauto.press("tab")
+                check_stop()
                 pyauto.write(f"{device} - {self.detailed_description_entry.get('1.0', END).strip()}")
                 pyauto.PAUSE = 0.05
                 for _ in range(39):
+                    check_stop()
                     pyauto.hotkey("shift", "tab")
                 pyauto.press("space")
+                check_stop()
                 pyauto.write(self.resolution_entry.get("1.0", END).strip())
+                check_stop()
                 for _ in range(7):
+                    check_stop()
                     pyauto.hotkey("shift", "tab")
                 for _ in range(2):
+                    check_stop()
                     pyauto.press("down")
                 for _ in range(8):
+                    check_stop()
                     pyauto.press("tab")
                 pyauto.press("space")
+                check_stop()
                 time.sleep(3)
+                check_stop()
                 browser.close()
+                check_stop()
                 time.sleep(1)
         except pyauto.FailSafeException:
             pyauto.alert(text='Script stopped by user.', title='Stopped')

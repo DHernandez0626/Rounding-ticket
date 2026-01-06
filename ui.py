@@ -161,7 +161,7 @@ class Mainframe():
         self.resolution_entry.grid(column=1, columnspan=3, row=8, sticky=(W, E), padx=5, pady=5)
         
         
-        warning_label = tk.Label(self.mainframe, text="WARNING: To stop program after submitting move mouse to top left corner of screen", fg="red")
+        warning_label = tk.Label(self.mainframe, text="WARNING: To stop program after submitting move mouse to top left corner of screen or press ESC", fg="red")
         warning_label.grid(column=5, row=7, rowspan= 2, sticky=(S, E), padx=5, pady=5)
         
         # Submit Tickets Button

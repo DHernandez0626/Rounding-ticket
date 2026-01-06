@@ -13,11 +13,22 @@ from tkinter import ttk, messagebox
 from playwright.sync_api import sync_playwright
 import pyautogui as pyauto
 import time
+import keyboard
+import sys
 
+# Safety: PyAutoGUI failsafe (move mouse to top-left corner to stop)
+pyauto.FAILSAFE = True
 
+STOP_KEYS = ['esc']
 
 SERVICE_WEBSITE = "https://hcaservicecentral.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D-1%26sysparm_query%3Dactive%3Dtrue%26sysparm_stack%3Dincident_list.do%3Fsysparm_query%3Dactive%3Dtrue"
 
+
+def check_stop():
+    """Check if any stop key is pressed."""
+    for key in STOP_KEYS:
+        if keyboard.is_pressed(key):
+            raise pyauto.FailSafeException
 
 
 class Mainframe():
@@ -35,10 +46,10 @@ class Mainframe():
         self.mainframe = tk.Frame(parent)
         self.mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
         
-        
+        self.root = parent
         # Define categories and subcategories for ticket types
         self.CATEGORY = ["PC", "Printer", "Tracker", "Laptop", "Scanner", "Mobile Phone"]
-        self.HARDWARE_SUBCATEGORIES = ("Broken", "Consumables (Paper/Toner/Ink)", "Hardware Failure", "Hardware Installation/Setup")
+        self.HARDWARE_SUBCATEGORIES = ("Broken", "Consumables (Paper/Toner/Ink)", "Hardware Failure", "Hardware Setup/Installation")
         self.APPLICATION_SUBCATEGORIES = ("Configuration/Functionality", "Connectivity")
         self.NETWORK_SUBCATEGORIES = ("Connectivity – External", "Connectivity – Internal", "Hardware Failure", "Hardware Upgrade")
         self.STORAGE_SUBCATEGORIES = ("Capacity")
@@ -87,7 +98,7 @@ class Mainframe():
     
         
         # Label and Entry for Location
-        location_label = tk.Label(self.mainframe, text="Location: ")
+        location_label = tk.Label(self.mainframe, text="Hospital: ")
         location_label.grid(column=0, row=1, sticky=W, padx=5, pady=5)
         self.location_entry_var = StringVar()
         self.location_entry = tk.Entry(self.mainframe, width=30, textvariable=self.location_entry_var)
@@ -149,9 +160,13 @@ class Mainframe():
         self.resolution_entry = tk.Text(self.mainframe, width=80, height=10)
         self.resolution_entry.grid(column=1, columnspan=3, row=8, sticky=(W, E), padx=5, pady=5)
         
+        
+        warning_label = tk.Label(self.mainframe, text="WARNING: To stop program after submitting press ESC or move mouse to top left corner of screen", fg="red")
+        warning_label.grid(column=5, row=7, rowspan= 2, sticky=(S, E), padx=5, pady=5)
+        
         # Submit Tickets Button
         self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
-        self.submit_button.grid(column=8, row=7, sticky=(S, E), padx=5, pady=10)
+        self.submit_button.grid(column=7, row=7, rowspan=2, sticky=(S, E), padx=5, pady=10)
         
         
         
@@ -185,33 +200,90 @@ class Mainframe():
         # Use playwright.chromium, playwright.firefox or playwright.webkit
         # Pass headless=False to launch() to see the browser UI
         
-        for device in self.all_devices_listbox.get(0, END):
-            browser = playwright.chromium.launch(headless=False, channel="msedge")
-            page = browser.new_page()
-            page.goto(SERVICE_WEBSITE, wait_until="networkidle")
-            time.sleep(2)
-            pyauto.PAUSE = 2
-            pyauto.write(self.user_entry_var.get())
-            pyauto.press("down")
-            pyauto.press("enter")
-            for _ in range(7):
+        self.root.iconify()
+        try:
+            for device in self.all_devices_listbox.get(0, END):
+                browser = playwright.chromium.launch(headless=False, channel="msedge")
+                page = browser.new_page()
+                page.goto(SERVICE_WEBSITE, wait_until="networkidle")
+                time.sleep(2)
+                pyauto.PAUSE = 2
+                pyauto.write(self.user_entry_var.get())
+                pyauto.press("down")
+                pyauto.press("enter")
+                pyauto.PAUSE = 0.2
+                for _ in range(7):
+                    pyauto.press("tab")
+                pyauto.PAUSE = 2
+                pyauto.write(self.location_entry_var.get())
+                pyauto.press("down")
+                pyauto.press("enter")
+                pyauto.PAUSE = 0.2
+                for _ in range(3):
+                    pyauto.press("tab")
+                pyauto.write(self.department_entry_var.get())
+                for _ in range(4):
+                    pyauto.press("tab")
+                pyauto.PAUSE = 2
+                if self.issue_type_var.get() == "PC" or self.issue_type_var.get() == "Laptop":
+                    pyauto.write(f"TSO Computer - {self.location_entry_var.get()}")
+                elif self.issue_type_var.get() == "Printer":
+                    pyauto.write(f"TSO Printer - {self.location_entry_var.get()}")
+                elif self.issue_type_var.get() == "Tracker":
+                    pyauto.write("Thin Tracker - East Florida")
+                elif self.issue_type_var.get() == "Scanner":
+                    pyauto.write(f"TSO Barcode Scanner - {self.location_entry_var.get()}")
+                elif self.issue_type_var.get() == "Mobile Phone":
+                    pyauto.write(f"TSO Mobile Device - {self.location_entry_var.get()}")
+                
+                pyauto.press("down")
+                pyauto.press("enter")
+                pyauto.PAUSE = 0.2
+                for _ in range(2):
+                    pyauto.press("tab")
+                pyauto.PAUSE = 2
+                pyauto.write(self.category_var.get())
+                pyauto.press("down")
+                pyauto.press("enter")
+                pyauto.PAUSE = 0.2
                 pyauto.press("tab")
-            pyauto.write(self.location_entry_var.get())
-            pyauto.press("down")
-            pyauto.press("enter")
-            for _ in range(3):
+                pyauto.PAUSE = 2
+                pyauto.write(self.subissue_type_var.get())
+                pyauto.press("down")
+                pyauto.press("enter")
+                pyauto.PAUSE = 0.1
+                for _ in range(2):
+                    pyauto.press("tab")
+                for _ in range(4):
+                    pyauto.press("down")
+                for _ in range(10):
+                    pyauto.press("tab")
+                for _ in range(2):
+                    pyauto.press("down")
+                for _ in range(5):
+                    pyauto.press("tab")
+                pyauto.write(f"{device}- {self.issue_type_var.get()} - {self.short_description_entry.get()}")
                 pyauto.press("tab")
-            pyauto.write(self.department_entry_var.get())
-            for _ in range(4):
-                pyauto.press("tab")
-            pyauto.write(self.issue_type_var.get())
-            pyauto.press("down")
-            pyauto.press("enter")
-            pyauto.press("tab")
-            pyauto.write(self.category_var.get())
-            pyauto.press("down")
-            pyauto.press("enter")
-            pyauto.press("tab")
-            pyauto.write(self.subissue_type_var.get())
-            
-        
+                pyauto.write(f"{device} - {self.detailed_description_entry.get('1.0', END).strip()}")
+                pyauto.PAUSE = 0.05
+                for _ in range(39):
+                    pyauto.hotkey("shift", "tab")
+                pyauto.press("space")
+                pyauto.write(self.resolution_entry.get("1.0", END).strip())
+                for _ in range(7):
+                    pyauto.hotkey("shift", "tab")
+                for _ in range(2):
+                    pyauto.press("down")
+                for _ in range(8):
+                    pyauto.press("tab")
+                pyauto.press("space")
+                time.sleep(3)
+                browser.close()
+                time.sleep(1)
+        except pyauto.FailSafeException:
+            pyauto.alert(text='Script stopped by user.', title='Stopped')
+            time.sleep(4)
+            sys.exit(0)
+        pyauto.alert(text='Script completed', title='Stopped')
+        time.sleep(4)
+        sys.exit(0)

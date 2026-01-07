@@ -24,11 +24,17 @@ STOP_KEYS = ['esc']
 SERVICE_WEBSITE = "https://hcaservicecentral.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D-1%26sysparm_query%3Dactive%3Dtrue%26sysparm_stack%3Dincident_list.do%3Fsysparm_query%3Dactive%3Dtrue"
 
 
+
+TICKET_DATA = []
+
+
+
 def check_stop():
     """Check if any stop key is pressed."""
     for key in STOP_KEYS:
         if keyboard.is_pressed(key):
             raise pyauto.FailSafeException
+        
 
 
 class Mainframe():

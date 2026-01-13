@@ -189,9 +189,13 @@ class Mainframe():
         warning_label = tk.Label(self.mainframe, text="WARNING: To stop program after submitting move mouse to top left corner of screen or press ESC", fg="red")
         warning_label.grid(column=5, row=7, rowspan= 2, sticky=(S, E), padx=5, pady=5)
         
+        # Clear entry field button 
+        self.clear_button = tk.Button(self.mainframe, text="Clear Fields", command=lambda: [self.user_entry_var.set(""), self.location_entry_var.set(""), self.department_entry_var.set(""), self.list_of_devices_entry.delete(0, END), self.short_description_label_var.set(""), self.detailed_description_entry.delete("1.0", END), self.resolution_entry.delete("1.0", END)])
+        self.clear_button.grid(column=6, row=8, rowspan=2, sticky=(S, E), padx=5, pady=10)
+        
         # Submit Tickets Button
         self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
-        self.submit_button.grid(column=7, row=7, rowspan=2, sticky=(S, E), padx=5, pady=10)
+        self.submit_button.grid(column=7, row=8, rowspan=2, sticky=(S, E), padx=5, pady=10)
         
         
         

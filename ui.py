@@ -85,8 +85,6 @@ class Mainframe():
                 "resolution": self.resolution_entry.get("1.0", END).strip()
             })
             
-            print(self.ticket_data)
-            
             self.all_devices_listbox.insert(END, self.list_of_devices_entry.get())
         
         def remove_device():

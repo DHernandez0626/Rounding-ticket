@@ -3,8 +3,6 @@ This is intended to increase work flow productivity by minimizing the amount of 
 
 This workflow was intended specifically for HCA FLORIDA KENDALL's IT team but this may work for multiple facilities and could potentially free users from having to spend a lot of time creating tickets.
 
-any questions in regard to this program please reach out to me on Webex Danny Hernandez or via email Danny.Hernandez3@hcahealthcare.com
-
 
 ########################################################################################################
 

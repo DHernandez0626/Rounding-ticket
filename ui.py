@@ -25,9 +25,6 @@ SERVICE_WEBSITE = "https://hcaservicecentral.service-now.com/now/nav/ui/classic/
 
 
 
-TICKET_DATA = []
-
-
 
 def check_stop():
     """Check if any stop key is pressed."""
@@ -51,6 +48,7 @@ class Mainframe():
     def __init__(self, parent):
         self.mainframe = tk.Frame(parent)
         self.mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        self.ticket_data = []
         
         self.root = parent
         # Define categories and subcategories for ticket types
@@ -66,16 +64,38 @@ class Mainframe():
         
         # Functions for adding and removing devices from the listbox
         def add_device():
-            device = self.list_of_devices_entry.get()
-            if device:
-                self.list_of_devices.append(device)
-                self.all_devices_listbox.insert(END, device)
+            try:
+            # if any fields are empty, raise ValueError
+                if self.user_entry_var.get() == "" or self.location_entry_var.get() == "" or self.department_entry_var.get() == "" or self.issue_type_var.get() == "" or self.short_description_label_var.get() == "" or self.detailed_description_entry.get("1.0", END).strip() == "" or self.resolution_entry.get("1.0", END).strip() == "":
+                    raise ValueError("All fields must be filled out before submitting tickets.")
+            except ValueError:
+                messagebox.showerror("Input Error", "All fields must be filled out before submitting tickets.")
+                return
+            
+            self.ticket_data.append({
+                "user": self.user_entry_var.get(),
+                "location": self.location_entry_var.get(),
+                "department": self.department_entry_var.get(),
+                "device": self.list_of_devices_entry.get(),
+                "issue_type": self.issue_type_var.get(),
+                "category": self.category_var.get(),
+                "subcategory": self.subissue_type_var.get(),
+                "short_description": self.short_description_label_var.get(),
+                "detailed_description": self.detailed_description_entry.get("1.0", END).strip(),
+                "resolution": self.resolution_entry.get("1.0", END).strip()
+            })
+            
+            print(self.ticket_data)
+            
+            self.all_devices_listbox.insert(END, self.list_of_devices_entry.get())
         
         def remove_device():
             selected_indices = self.all_devices_listbox.curselection()
-            for index in reversed(selected_indices):
+            print(selected_indices)
+            
+            for index in selected_indices:
+                self.ticket_data.pop(index)
                 self.all_devices_listbox.delete(index)
-                del self.list_of_devices[index]
         
         # Label and Entry for User reported by: section
         user_label = tk.Label(self.mainframe, text="User reported by: ")
@@ -85,7 +105,6 @@ class Mainframe():
         self.user_entry.grid(column=1, row=0, sticky=W, padx=5, pady=5)
     
         # Listbox and related widgets for List of Devices
-        self.list_of_devices = []
         list_of_devices_label = tk.Label(self.mainframe, text="List of Devices (if applicable): ")
         list_of_devices_label.grid(column=3, row=0, sticky=E, padx=5, pady=5)
         self.location_entry_var = StringVar()
@@ -208,7 +227,7 @@ class Mainframe():
         
         self.root.iconify()
         try:
-            for device in self.all_devices_listbox.get(0, END):
+            for ticket in self.ticket_data:
                 browser = playwright.chromium.launch(headless=False, channel="msedge")
                 check_stop()
                 page = browser.new_page()
@@ -217,7 +236,7 @@ class Mainframe():
                 check_stop()
                 time.sleep(2)
                 pyauto.PAUSE = 2
-                pyauto.write(self.user_entry_var.get())
+                pyauto.write(ticket["user"])
                 check_stop()
                 pyauto.press("down")
                 check_stop()
@@ -228,7 +247,9 @@ class Mainframe():
                     check_stop()
                     pyauto.press("tab")
                 pyauto.PAUSE = 2
-                pyauto.write(self.location_entry_var.get())
+                
+                pyauto.write(ticket["location"])
+                
                 check_stop()
                 pyauto.press("down")
                 check_stop()
@@ -238,22 +259,26 @@ class Mainframe():
                 for _ in range(3):
                     check_stop()
                     pyauto.press("tab")
-                pyauto.write(self.department_entry_var.get())
+                    
+                pyauto.write(ticket["department"])
                 check_stop()
+                
                 for _ in range(4):
                     pyauto.press("tab")
                     check_stop()
                 pyauto.PAUSE = 2
-                if self.issue_type_var.get() == "PC" or self.issue_type_var.get() == "Laptop":
-                    pyauto.write(f"TSO Computer - {self.location_entry_var.get()}")
-                elif self.issue_type_var.get() == "Printer":
-                    pyauto.write(f"TSO Printer - {self.location_entry_var.get()}")
-                elif self.issue_type_var.get() == "Tracker":
+                
+                if ticket["issue_type"] == "PC" or ticket["issue_type"] == "Laptop":
+                    pyauto.write(f"TSO Computer - {ticket["location"]}")
+                elif ticket["issue_type"] == "Printer":
+                    pyauto.write(f"TSO Printer - {ticket["location"]}")
+                elif ticket["issue_type"] == "Tracker":
                     pyauto.write("Thin Tracker - East Florida")
-                elif self.issue_type_var.get() == "Scanner":
-                    pyauto.write(f"TSO Barcode Scanner - {self.location_entry_var.get()}")
-                elif self.issue_type_var.get() == "Mobile Phone":
-                    pyauto.write(f"TSO Mobile Device - {self.location_entry_var.get()}")
+                elif ticket["issue_type"] == "Scanner":
+                    pyauto.write(f"TSO Barcode Scanner - {ticket["location"]}")
+                elif ticket["issue_type"] == "Mobile Phone":
+                    pyauto.write(f"TSO Mobile Device - {ticket["location"]}")
+                    
                 check_stop()
                 pyauto.press("down")
                 check_stop()
@@ -265,7 +290,9 @@ class Mainframe():
                     pyauto.press("tab")
                 pyauto.PAUSE = 2
                 check_stop()
-                pyauto.write(self.category_var.get())
+                
+                pyauto.write(ticket["category"])
+                
                 check_stop()
                 pyauto.press("down")
                 check_stop()
@@ -276,7 +303,9 @@ class Mainframe():
                 pyauto.press("tab")
                 check_stop()
                 pyauto.PAUSE = 2
-                pyauto.write(self.subissue_type_var.get())
+                
+                pyauto.write(ticket["subcategory"])
+                
                 check_stop()
                 pyauto.press("down")
                 check_stop()
@@ -298,18 +327,24 @@ class Mainframe():
                 for _ in range(5):
                     check_stop()
                     pyauto.press("tab")
-                pyauto.write(f"{device}- {self.issue_type_var.get()} - {self.short_description_entry.get()}")
+                    
+                pyauto.write(f"{ticket["device"]}- {ticket["issue_type"]} - {ticket["short_description"]}")
+                
                 check_stop()
                 pyauto.press("tab")
                 check_stop()
-                pyauto.write(f"{device} - {self.detailed_description_entry.get('1.0', END).strip()}")
+                
+                pyauto.write(f"{ticket["device"]} - {ticket["detailed_description"]}")
+                
                 pyauto.PAUSE = 0.05
                 for _ in range(39):
                     check_stop()
                     pyauto.hotkey("shift", "tab")
                 pyauto.press("space")
                 check_stop()
-                pyauto.write(self.resolution_entry.get("1.0", END).strip())
+                
+                pyauto.write(ticket["resolution"])
+                
                 check_stop()
                 for _ in range(7):
                     check_stop()

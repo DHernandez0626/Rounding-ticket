@@ -75,6 +75,7 @@ class Mainframe():
             self.ticket_data.append({
                 "user": self.user_entry_var.get(),
                 "location": self.location_entry_var.get(),
+                "other_location": self.other_location.get(),
                 "department": self.department_entry_var.get(),
                 "device": self.list_of_devices_entry.get(),
                 "issue_type": self.issue_type_var.get(),
@@ -89,7 +90,6 @@ class Mainframe():
         
         def remove_device():
             selected_indices = self.all_devices_listbox.curselection()
-            print(selected_indices)
             
             for index in selected_indices:
                 self.ticket_data.pop(index)
@@ -127,7 +127,9 @@ class Mainframe():
         self.location_entry = tk.Entry(self.mainframe, width=30, textvariable=self.location_entry_var)
         self.location_entry.grid(column=1, row=1, sticky=W, padx=5, pady=5)
         
-        
+        self.other_location = BooleanVar()
+        self.other_location_checkbox = ttk.Checkbutton(self.mainframe, text="Is user's at a different location?", onvalue= True, offvalue=False, variable=self.other_location)
+        self.other_location_checkbox.grid(column=2, row=1, sticky=W, padx=5, pady=5)
         
         # Label and Entry for Department
         department_label = tk.Label(self.mainframe, text="Department: ")
@@ -260,6 +262,8 @@ class Mainframe():
                 pyauto.PAUSE = 0.2
                 for _ in range(3):
                     check_stop()
+                    pyauto.press("tab")
+                if ticket["other_location"] == True:
                     pyauto.press("tab")
                     
                 pyauto.write(ticket["department"])

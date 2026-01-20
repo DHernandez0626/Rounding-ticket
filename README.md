@@ -3,12 +3,19 @@ This is intended to increase work flow productivity by minimizing the amount of 
 
 This workflow was intended specifically for HCA FLORIDA KENDALL's IT team but this may work for multiple facilities and could potentially free users from having to spend a lot of time creating tickets.
 
+any questions in regard to this program please reach out to me on Webex Danny Hernandez or via email Danny.Hernandez3@hcahealthcare.com
+
 
 ########################################################################################################
 
 IF YOU NEED TO ABORT PROGRAM PRESS ESC OR MOVE YOUR MOUSE TO THE TOP LEFT CORNER OF YOUR MONITOR UNTIL AN ALERT WINDOW APPEARS
 
 ########################################################################################################
+
+Form must be set up the same as the attached image
+
+<img src="./dist/Example_form.png"/>
+
 
 -------------------------------------------------------------------
 

@@ -72,6 +72,7 @@ class Mainframe():
                 messagebox.showerror("Input Error", "All fields must be filled out before submitting tickets.")
                 return
             
+            # adds each device in the text field per \n into the list box and ticket_data array as an object
             for device in self.list_of_devices_entry.get("1.0", END).strip().splitlines():
                 self.ticket_data.append({
                     "user": self.user_entry_var.get(),
@@ -195,7 +196,7 @@ class Mainframe():
         self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
         self.submit_button.grid(column=7, row=8, rowspan=2, sticky=(S, E), padx=5, pady=10)
         
-        
+    # populated entry fields from selected ticket via double click to the listbox
     def populate_ticket_data(self, event):
         selected_index = self.all_devices_listbox.curselection()
         ticket = self.ticket_data[selected_index[0]]
@@ -278,6 +279,7 @@ class Mainframe():
                 for _ in range(3):
                     check_stop()
                     pyauto.press("tab")
+                # If user is located in another facility will skip the check box that appears
                 if ticket["other_location"] == True:
                     pyauto.press("tab")
                     

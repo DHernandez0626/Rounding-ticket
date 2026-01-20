@@ -72,21 +72,21 @@ class Mainframe():
                 messagebox.showerror("Input Error", "All fields must be filled out before submitting tickets.")
                 return
             
-            self.ticket_data.append({
-                "user": self.user_entry_var.get(),
-                "location": self.location_entry_var.get(),
-                "other_location": self.other_location.get(),
-                "department": self.department_entry_var.get(),
-                "device": self.list_of_devices_entry.get(),
-                "issue_type": self.issue_type_var.get(),
-                "category": self.category_var.get(),
-                "subcategory": self.subissue_type_var.get(),
-                "short_description": self.short_description_label_var.get(),
-                "detailed_description": self.detailed_description_entry.get("1.0", END).strip(),
-                "resolution": self.resolution_entry.get("1.0", END).strip()
-            })
-            
-            self.all_devices_listbox.insert(END, self.list_of_devices_entry.get())
+            for device in self.list_of_devices_entry.get("1.0", END).strip().splitlines():
+                self.ticket_data.append({
+                    "user": self.user_entry_var.get(),
+                    "location": self.location_entry_var.get(),
+                    "other_location": self.other_location.get(),
+                    "department": self.department_entry_var.get(),
+                    "device": device,
+                    "issue_type": self.issue_type_var.get(),
+                    "category": self.category_var.get(),
+                    "subcategory": self.subissue_type_var.get(),
+                    "short_description": self.short_description_label_var.get(),
+                    "detailed_description": self.detailed_description_entry.get("1.0", END).strip(),
+                    "resolution": self.resolution_entry.get("1.0", END).strip()
+                })
+                self.all_devices_listbox.insert(END, device)
         
         def remove_device():
             selected_indices = self.all_devices_listbox.curselection()
@@ -105,19 +105,16 @@ class Mainframe():
         # Listbox and related widgets for List of Devices
         list_of_devices_label = tk.Label(self.mainframe, text="List of Devices (if applicable): ")
         list_of_devices_label.grid(column=3, row=0, sticky=E, padx=5, pady=5)
-        self.location_entry_var = StringVar()
-        self.list_of_devices_entry = tk.Entry(self.mainframe, width=20, textvariable=self.location_entry_var)
-        self.list_of_devices_entry.grid(column=5, row=0, sticky=W, padx=5, pady=5)
+        self.list_of_devices_entry = tk.Text(self.mainframe, width=15 ,height=12)
+        self.list_of_devices_entry.grid(column=5, row=1, rowspan=3, sticky=W, padx=5, pady=5)
         
         self.add_device_button = tk.Button(self.mainframe, text="Add", command=add_device)
-        self.add_device_button.grid(column=6, row=0, sticky=W, padx=5, pady=5)
+        self.add_device_button.grid(column=5, row=0, sticky=E, padx=5, pady=5)
         self.remove_device_button = tk.Button(self.mainframe, text="Remove", command=remove_device)
-        self.remove_device_button.grid(column=7, row=0, sticky=W, padx=5, pady=5)
+        self.remove_device_button.grid(column=6, row=0, sticky=E, padx=5, pady=5)
         
         self.all_devices_listbox = tk.Listbox(self.mainframe, height=10, width=50)
-        self.all_devices_listbox.grid(column=4,columnspan=3, row=1, rowspan=5, sticky=(N,S), padx=(15,0), pady=5)
-        self.all_devices_listbox_scrollbar = tk.Scrollbar(self.mainframe, orient=VERTICAL, command=self.all_devices_listbox.yview)
-        self.all_devices_listbox_scrollbar.grid(column=7, row=1, rowspan=5, sticky=(N,S,W), padx=(0,5), pady=5)
+        self.all_devices_listbox.grid(column=4,columnspan=3, row=0, rowspan=5, sticky=(N,S), padx=(15,0), pady=5)
         self.all_devices_listbox.bind("<Double-1>", self.populate_ticket_data)
     
         
@@ -205,7 +202,6 @@ class Mainframe():
         self.user_entry_var.set(ticket["user"])
         self.location_entry_var.set(ticket["location"])
         self.department_entry_var.set(ticket["department"])
-        self.other_location.set(ticket["other_location"])
         self.list_of_devices_entry.delete(0, END)
         self.list_of_devices_entry.insert(0, ticket["device"])
         self.issue_type_var.set(ticket["issue_type"])

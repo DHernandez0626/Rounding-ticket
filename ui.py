@@ -55,7 +55,7 @@ class Mainframe():
         self.CATEGORY = ["PC", "Printer", "Tracker", "Laptop", "Scanner", "Mobile Phone"]
         self.HARDWARE_SUBCATEGORIES = ("Broken", "Consumables (Paper/Toner/Ink)", "Hardware Failure", "Hardware Setup/Installation")
         self.APPLICATION_SUBCATEGORIES = ("Configuration/Functionality", "Connectivity")
-        self.NETWORK_SUBCATEGORIES = ("Connectivity – External", "Connectivity – Internal", "Hardware Failure", "Hardware Upgrade")
+        self.NETWORK_SUBCATEGORIES = ("Connectivity - External", "Connectivity - Internal", "Hardware Failure", "Hardware Upgrade")
         self.STORAGE_SUBCATEGORIES = ("Capacity")
         self.subissue_type_var = StringVar()
         

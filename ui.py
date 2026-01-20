@@ -118,6 +118,7 @@ class Mainframe():
         self.all_devices_listbox.grid(column=4,columnspan=3, row=1, rowspan=5, sticky=(N,S), padx=(15,0), pady=5)
         self.all_devices_listbox_scrollbar = tk.Scrollbar(self.mainframe, orient=VERTICAL, command=self.all_devices_listbox.yview)
         self.all_devices_listbox_scrollbar.grid(column=7, row=1, rowspan=5, sticky=(N,S,W), padx=(0,5), pady=5)
+        self.all_devices_listbox.bind("<Double-1>", self.populate_ticket_data)
     
         
         # Label and Entry for Location
@@ -197,6 +198,24 @@ class Mainframe():
         self.submit_button = tk.Button(self.mainframe, text="Submit Tickets", command=self.submit_tickets)
         self.submit_button.grid(column=7, row=8, rowspan=2, sticky=(S, E), padx=5, pady=10)
         
+        
+    def populate_ticket_data(self, event):
+        selected_index = self.all_devices_listbox.curselection()
+        ticket = self.ticket_data[selected_index[0]]
+        self.user_entry_var.set(ticket["user"])
+        self.location_entry_var.set(ticket["location"])
+        self.department_entry_var.set(ticket["department"])
+        self.other_location.set(ticket["other_location"])
+        self.list_of_devices_entry.delete(0, END)
+        self.list_of_devices_entry.insert(0, ticket["device"])
+        self.issue_type_var.set(ticket["issue_type"])
+        self.category_var.set(ticket["category"])
+        self.subissue_type_var.set(ticket["subcategory"])
+        self.short_description_label_var.set(ticket["short_description"])
+        self.detailed_description_entry.delete("1.0", END)
+        self.detailed_description_entry.insert("1.0", ticket["detailed_description"])
+        self.resolution_entry.delete("1.0", END)
+        self.resolution_entry.insert("1.0", ticket["resolution"])
         
         
     # Function to change subcategories based on selected category    

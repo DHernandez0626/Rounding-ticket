@@ -24,6 +24,8 @@ STOP_KEYS = ['esc']
 SERVICE_WEBSITE = "https://hcaservicecentral.service-now.com/now/nav/ui/classic/params/target/incident.do%3Fsys_id%3D-1%26sysparm_query%3Dactive%3Dtrue%26sysparm_stack%3Dincident_list.do%3Fsysparm_query%3Dactive%3Dtrue"
 
 
+# Time between entry fields populating and the down key to be pressed
+PAUSE_TIME = 1.5
 
 
 def check_stop():
@@ -255,7 +257,7 @@ class Mainframe():
                 page.goto(SERVICE_WEBSITE, wait_until="networkidle")
                 check_stop()
                 time.sleep(2)
-                pyauto.PAUSE = 2
+                pyauto.PAUSE = PAUSE_TIME
                 pyauto.write(ticket["user"])
                 check_stop()
                 pyauto.press("down")
@@ -266,7 +268,7 @@ class Mainframe():
                 for _ in range(7):
                     check_stop()
                     pyauto.press("tab")
-                pyauto.PAUSE = 2
+                pyauto.PAUSE = PAUSE_TIME
                 
                 pyauto.write(ticket["location"])
                 
@@ -289,7 +291,7 @@ class Mainframe():
                 for _ in range(4):
                     pyauto.press("tab")
                     check_stop()
-                pyauto.PAUSE = 2
+                pyauto.PAUSE = PAUSE_TIME
                 
                 if ticket["issue_type"] == "PC" or ticket["issue_type"] == "Laptop":
                     pyauto.write(f"TSO Computer - {ticket["location"]}")
@@ -311,7 +313,7 @@ class Mainframe():
                 for _ in range(2):
                     check_stop()
                     pyauto.press("tab")
-                pyauto.PAUSE = 2
+                pyauto.PAUSE = PAUSE_TIME
                 check_stop()
                 
                 pyauto.write(ticket["category"])
@@ -325,7 +327,7 @@ class Mainframe():
                 check_stop()
                 pyauto.press("tab")
                 check_stop()
-                pyauto.PAUSE = 2
+                pyauto.PAUSE = PAUSE_TIME
                 
                 pyauto.write(ticket["subcategory"])
                 

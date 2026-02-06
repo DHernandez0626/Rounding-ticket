@@ -12,8 +12,17 @@ IF YOU NEED TO ABORT PROGRAM PRESS ESC OR MOVE YOUR MOUSE TO THE TOP LEFT CORNER
 
 Form must be set up the same as the attached image
 
-<img src="./dist/Example_form.png"/>
-
+<img src="./dist/images/Example-form.png"/>
+<img src="./dist/images/closing-notes.png"/>
+<img src="./dist/images/filter1.png"/>
+<img src="./dist/images/filter2.png"/>
+<img src="./dist/images/filter3.png"/>
+<img src="./dist/images/filter4.png"/>
+<img src="./dist/images/filter5.png"/>
+<img src="./dist/images/filter6.png"/>
+<img src="./dist/images/filter7.png"/>
+<img src="./dist/images/filter8.png"/>
+<img src="./dist/images/filter9.png"/>
 
 -------------------------------------------------------------------
 
